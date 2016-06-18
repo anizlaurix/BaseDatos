@@ -1,0 +1,174 @@
+<!-DOCTYPE HTML-->
+<html>
+<head>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" type="text/css"/>
+<link rel="stylesheet" href="css/jquery.mobile.theme-1.4.5.min.css" type="text/css"  />
+<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-2.2.0.min.js" ></script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js" ></script>
+<script type="text/javascript">
+document.addEventListener("deviceready", function (){
+	$("#btnGuardar").tap(function (){
+	   var id=$("#txtId").val();	
+	   var nombre=$("#txtNombre").val();	
+	   var apellidoPa=$("#txtapePa").val();
+	   var apellidoMa=$("#txtapeMa").val();
+	   var Edad=$("#txtedad").val();
+	   var Curp=$("#txtcurp").val();
+		$.ajax({
+			type: "POST",
+			url:"http://anizlaurix.esy.es/guardar.php",
+			data:"ID="+id+"&nom="+nombre+"&apePa="+apellidoPa+"&apeMa="+apellidoMa+"&edad="+Edad+"&curp="+Curp,
+			success: function (datos){
+				alert(datos);
+			}
+		});
+	});
+		
+	$("#btnConsultar").tap(function (){
+	alert("funciona");
+	$.ajax({
+	type:"POST",
+	url:"http://anizlaurix.esy.es/consultarTodo.php",
+	data:"",
+	success: function(data){
+		alert(data);
+		var reg= $.parseJSON(data);
+		var datos=$("#resConsulta");
+		datos.html(' <table border="1" width= "100" id= "tbl1"> <th>Id</th> <th>nombre</th> <th>apellidoPa</th> <th>apellidoMa</th> <th>edad</th> <th>curp</th> ');
+		var fila=$("#tbl1");
+		
+		for(var i in reg){
+			fila.append('<tr><td>'+reg[i].Id+'</td><td>' +reg[i].nombre+'</td><td>' +reg[i].apellidoPa+'</td><td>'+reg[i].apellidoMa+'</td><td>'+reg[i].edad+'</td><td>'+reg[i].curp+'</td></tr>');
+		}
+		fila.append('</table>');
+		}
+	});
+	});
+        
+        $("#btnConsultarID").tap(function (){
+        var id= $("#txtIDConsult").val();
+	alert("funciona");
+	$.ajax({
+	type:"POST",
+	url:"http://anizlaurix.esy.es/consultaID.php",
+	data:"ID="+id,
+	success: function(respuesta){
+		var reg= $.parseJSON(respuesta);
+		var datos=$("#resConsultaID");
+		datos.html(' <table border="1" width= "100" id= "tbl2"> <th>Id</th> <th>nombre</th> <th>apellidoPa</th> <th>apellidoMa</th> <th>edad</th> <th>curp</th> ');
+		var fila=$("#tbl2");
+		
+		for(var i in reg){
+			fila.append('<tr><td>'+reg[i].Id+'</td><td>' +reg[i].nombre+'</td><td>' +reg[i].apellidoPa+'</td><td>'+reg[i].apellidoMa+'</td><td>'+reg[i].edad+'</td><td>'+reg[i].curp+'</td></tr>');
+		}
+		fila.append('</table>');
+		}
+            });
+	});
+	$("#btnEliminarID").tap(function (){
+            var id=$("#txtIDEliminar").val();
+            alert(id);
+            $.ajax({
+                type:"POST",
+                url:"http://anizlaurix.esy.es/Eliminar.php",
+                data:"ID="+id,
+                success:function (respuesta){
+                    var reg=$.parseJSON(respuesta);
+                    var contenedor=$("#resEliminaID");
+                    contenedor.html('<table border ="1" whidth="100" id = "tbl2"><th>id</th><th>nombre</th><th>marca</th><th>precio</th><th>Cant</th> ');
+                    var fila=$("#tbl3");
+                    
+                    for(var i in reg){
+                       fila.append('<tr><td>'+reg[i].Id+'</td><td>' +reg[i].nombre+'</td><td>' +reg[i].apellidoPa+'</td><td>'+reg[i].apellidoMa+'</td><td>'+reg[i].edad+'</td><td>'+reg[i].curp+'</td></tr>');    
+                    }
+                     fila.append('</table>');
+                }
+            })
+            
+        })
+}, false);
+</script>
+</head>
+<body>
+
+<div data-role="page" id="menu" data-theme="b">
+	<div data-role="header">
+		<h1>Menu Principal</h1>
+	</div>
+	<div data-role= "content">
+	<a href = "#insertar" data-role= "button" data-transition= "flip"> Registrar productos </a>
+	<a href = "#consultar" data-role= "button" data-transition= "flip"> Consultar productos </a>
+        <a href = "#consultarID" data-role= "button" data-transition= "flip"> Consultar productos Especificos</a>
+        <a href="#eliminarID" data-role="button" data-transition="flip">Eliminar</a>
+	</div>
+	<div data-role="footer">
+     		<p>Juan Mora</p>
+	</div>
+	</div>
+
+<div data-role="page" id="insertar">
+	<div data-role="header">
+	<a href= "#menu" data-role= "button" data-transition="slidedown"> Atras</a>
+		<h1>Mi aplicación</h1>
+		<h1>Menu Principal</h1>
+	</div>
+	<div data-role="content">
+	   <input type="text" id="txtId" placeholder="Ingresa el id " />
+	   <input type="text" id="txtNombre" placeholder="Ingresa tu nombre" />
+	   <input type="text" id="txtapePa" placeholder="Ingresa tu Apellido Paterno" />
+	   <input type="text" id="txtapeMa" placeholder="Ingresa tu Apellio Materno" />
+	   <input type="text" id="txtedad" placeholder="Ingresa tu edad" />
+	   <input type="text" id="txtcurp" placeholder="Ingresa tu Curp" />
+	   <input type="button" id="btnGuardar" value="Guardar" />
+	</div>
+	<div data-role="footer">
+     		<p>pie de página</p>
+	</div>
+</div>
+
+<div data-role="page" id="consultar" data-theme="a">
+	<div data-role="header">
+		<h1>Consultar productos</h1>
+	</div>
+	<div data-role= "content">
+	<input type="button" value= "Consultar todo" id ="btnConsultar"/>
+	<div id="resConsulta">
+	</div>
+	</div>
+	<div data-role="footer">
+     		<p>Ana Laura Mora</p>
+	</div>
+	</div>
+
+    <div data-role="page" id="consultarID" data-theme="a">
+	<div data-role="header">
+		<h1>Consultar productos Especificos</h1>
+	</div>
+	<div data-role= "content">
+            <input type="text" id="txtIDConsult" placeholder="Escribe el ID del producto"/>
+	<input type="button" value= "Consultar" id ="btnConsultarID"/>
+	<div id="resConsultaID">
+	</div>
+	</div>
+	<div data-role="footer">
+     		<p>Ana Laura Mora</p>
+	</div>
+	</div>
+     <div data-role="page" id="eliminarID" data-theme="a">
+        <div data-role="header">
+        <p> Eliminar productos especificos</P>
+        </div>
+        <div data-role="content">
+            <input type="text" id="txtIDEliminar" placeholder="Escribe el ID del producto" />
+            <input type="button" value="Eliminar" id="btnEliminarID" />
+            <DIV id="resEliminaID">
+            </div>
+        </div>
+                
+            <div data-role="footer">
+            <p> pie de pagina</P>  
+             </div>
+        </div>    
+</body>
+</html>
